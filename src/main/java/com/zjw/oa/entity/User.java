@@ -11,6 +11,7 @@ public class User {
   private long permission;
   private long sjUserId;
   private String phone;
+  private int departmentId;
 
 
   public long getUserId() {
@@ -81,5 +82,13 @@ public class User {
 
   public void setPhone(String phone) {
     this.phone = phone;
+  }
+
+  public int getDepartmentId() {
+    return departmentId;
+  }
+
+  public void setDepartmentId(int departmentId) {
+    this.departmentId = departmentId;
   }
 }

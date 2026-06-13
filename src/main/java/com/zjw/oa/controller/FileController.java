@@ -2,7 +2,6 @@ package com.zjw.oa.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
-import com.mysql.cj.util.StringUtils;
 import com.zjw.oa.entity.MyFile;
 import com.zjw.oa.util.JsonUtil;
 import org.slf4j.Logger;
@@ -158,7 +157,7 @@ public class FileController {
             MyFile myFile = new MyFile();
             myFile.setFileName(fileList[i].getName());
             myFile.setFileLength(convertFileSize((fileList[i].length())));
-            if(!StringUtils.isNullOrEmpty(fileName)&&fileList[i].getName().equals(fileName)){
+            if(fileName != null && !fileName.isEmpty() && fileList[i].getName().equals(fileName)){
                 list.add(myFile);
                 break;
             }else{

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjw.oa.mapper.DepartmentMapper">
+
+    <select id="getDeptList" resultType="com.zjw.oa.entity.Department">
+        select * from department order by departmentId
+    </select>
+
+    <select id="getDeptById" resultType="com.zjw.oa.entity.Department" parameterType="com.zjw.oa.entity.Department">
+        select * from department where departmentId=#{departmentId}
+    </select>
+
+    <insert id="addDept" parameterType="com.zjw.oa.entity.Department">
+        insert into department(departmentName) values(#{departmentName})
+    </insert>
+
+    <update id="updateDept" parameterType="com.zjw.oa.entity.Department">
+        update department set departmentName=#{departmentName} where departmentId=#{departmentId}
+    </update>
+
+    <delete id="delDept" parameterType="com.zjw.oa.entity.Department">
+        delete from department where departmentId=#{departmentId}
+    </delete>
+
+</mapper>

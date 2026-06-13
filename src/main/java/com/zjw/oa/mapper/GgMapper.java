@@ -25,4 +25,6 @@ public interface GgMapper {
 
     List<Xmjd> getxmList();
 
+    void addGg(Gsgg gsgg) throws Exception;
+
 }

@@ -12,4 +12,8 @@
       select * from xmjd order by xmjd
     </select>
 
+    <insert id="addGg" parameterType="com.zjw.oa.entity.Gsgg" useGeneratedKeys="true" keyProperty="ggId">
+        insert into gsgg(ggTitle, ggNr, ggTime, isZs) values(#{ggTitle}, #{ggNr}, #{ggTime}, #{isZs})
+    </insert>
+
 </mapper>

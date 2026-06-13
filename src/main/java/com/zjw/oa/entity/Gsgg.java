@@ -1,5 +1,7 @@
 package com.zjw.oa.entity;
 
+import java.util.Date;
+
 /**
 * gongsi gonggao 实体类
 **/
