@@ -18,4 +18,6 @@ public interface GgService {
 
     List<Xmjd> getxmList();
 
+    void addGg(Gsgg gsgg) throws Exception;
+
 }

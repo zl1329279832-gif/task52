@@ -31,4 +31,9 @@ public class GgServiceImpl implements GgService {
         return ggMapper.getxmList();
     }
 
+    @Override
+    public void addGg(Gsgg gsgg) throws Exception {
+        ggMapper.addGg(gsgg);
+    }
+
 }

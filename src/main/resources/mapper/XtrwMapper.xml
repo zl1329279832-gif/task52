@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjw.oa.mapper.XtrwMapper">
+
+    <!-- ==================== Task CRUD ==================== -->
+
+    <insert id="addXtrw" parameterType="com.zjw.oa.entity.Xtrw" useGeneratedKeys="true" keyProperty="xtrwId">
+        insert into xtrw(xtrwTitle, xtrwDesc, zfrUserId, zfrUserName, jzTime, createTime, updateTime, progress, status, isOverdue)
+        values(#{xtrwTitle}, #{xtrwDesc}, #{zfrUserId}, #{zfrUserName}, #{jzTime}, #{createTime}, #{updateTime}, #{progress}, #{status}, #{isOverdue})
+    </insert>
+
+    <select id="getXtrwDetail" resultType="com.zjw.oa.entity.Xtrw" parameterType="com.zjw.oa.entity.Xtrw">
+        select * from xtrw where xtrwId=#{xtrwId}
+    </select>
+
+    <update id="updateXtrwStatus">
+        update xtrw set status=#{status}, summary=#{summary}, updateTime=NOW() where xtrwId=#{xtrwId}
+    </update>
+
+    <update id="updateXtrwProgress">
+        update xtrw set progress=#{progress}, updateTime=NOW() where xtrwId=#{xtrwId}
+    </update>
+
+    <!-- ==================== Collaborators ==================== -->
+
+    <insert id="addXtUser" parameterType="com.zjw.oa.entity.XtrwXtUser">
+        insert into xtrw_xtuser(xtrwId, xtUserId, xtUserName) values(#{xtrwId}, #{xtUserId}, #{xtUserName})
+    </insert>
+
+    <select id="getXtUsersByXtrwId" resultType="com.zjw.oa.entity.XtrwXtUser">
+        select * from xtrw_xtuser where xtrwId=#{xtrwId}
+    </select>
+
+    <select id="getXtUser" resultType="com.zjw.oa.entity.XtrwXtUser">
+        select * from xtrw_xtuser where xtrwId=#{xtrwId} and xtUserId=#{xtUserId}
+    </select>
+
+    <!-- ==================== Progress Log ==================== -->
+
+    <insert id="addProgress" parameterType="com.zjw.oa.entity.XtrwProgress">
+        insert into xtrw_progress(xtrwId, userId, userName, progress, note, updateTime)
+        values(#{xtrwId}, #{userId}, #{userName}, #{progress}, #{note}, #{updateTime})
+    </insert>
+
+    <select id="getProgressByXtrwId" resultType="com.zjw.oa.entity.XtrwProgress">
+        select * from xtrw_progress where xtrwId=#{xtrwId} order by updateTime desc
+    </select>
+
+    <!-- ==================== Attachments ==================== -->
+
+    <insert id="addXtrwFile" parameterType="com.zjw.oa.entity.XtrwFile">
+        insert into xtrw_file(xtrwId, fileName, filePath, uploadTime, uploadUserId)
+        values(#{xtrwId}, #{fileName}, #{filePath}, #{uploadTime}, #{uploadUserId})
+    </insert>
+
+    <select id="getFilesByXtrwId" resultType="com.zjw.oa.entity.XtrwFile">
+        select * from xtrw_file where xtrwId=#{xtrwId}
+    </select>
+
+    <!-- ==================== Visible Departments ==================== -->
+
+    <insert id="addVisibleDept" parameterType="com.zjw.oa.entity.XtrwVisibleDept">
+        insert into xtrw_visible_dept(xtrwId, departmentId, departmentName)
+        values(#{xtrwId}, #{departmentId}, #{departmentName})
+    </insert>
+
+    <select id="getVisibleDeptsByXtrwId" resultType="com.zjw.oa.entity.XtrwVisibleDept">
+        select * from xtrw_visible_dept where xtrwId=#{xtrwId}
+    </select>
+
+    <!-- ==================== Query Methods ==================== -->
+
+    <select id="getMyOwnedTasks" resultType="com.zjw.oa.entity.Xtrw">
+        select * from xtrw where zfrUserId=#{zfrUserId} order by createTime desc
+    </select>
+
+    <select id="getMyCollabTasks" resultType="com.zjw.oa.entity.Xtrw">
+        select x.* from xtrw x, xtrw_xtuser xt where x.xtrwId=xt.xtrwId and xt.xtUserId=#{xtUserId} order by x.createTime desc
+    </select>
+
+    <select id="getOverdueTasks" resultType="com.zjw.oa.entity.Xtrw">
+        select * from xtrw where status=0 and jzTime &lt; NOW() order by jzTime asc
+    </select>
+
+    <select id="getCompletedTasks" resultType="com.zjw.oa.entity.Xtrw">
+        select * from xtrw where status=1 or status=2 order by updateTime desc
+    </select>
+
+    <select id="getVisibleTasksByDeptId" resultType="com.zjw.oa.entity.Xtrw">
+        select x.* from xtrw x, xtrw_visible_dept vd where x.xtrwId=vd.xtrwId and vd.departmentId=#{departmentId} order by x.createTime desc
+    </select>
+
+    <!-- ==================== Overdue ==================== -->
+
+    <select id="findNewlyOverdueTasks" resultType="com.zjw.oa.entity.Xtrw">
+        select * from xtrw where status=0 and isOverdue=0 and jzTime &lt; NOW()
+    </select>
+
+    <update id="markOverdue">
+        update xtrw set isOverdue=1 where xtrwId=#{xtrwId}
+    </update>
+
+    <!-- ==================== Todos ==================== -->
+
+    <insert id="addTodo" parameterType="com.zjw.oa.entity.XtrwTodo" useGeneratedKeys="true" keyProperty="todoId">
+        insert into xtrw_todo(xtrwId, xtrwTitle, userId, createTime, isRead)
+        values(#{xtrwId}, #{xtrwTitle}, #{userId}, #{createTime}, #{isRead})
+    </insert>
+
+    <select id="getTodoList" resultType="com.zjw.oa.entity.XtrwTodo">
+        select * from xtrw_todo where userId=#{userId} order by createTime desc
+    </select>
+
+    <update id="markTodoRead" parameterType="com.zjw.oa.entity.XtrwTodo">
+        update xtrw_todo set isRead=#{isRead} where todoId=#{todoId}
+    </update>
+
+    <update id="updateTodoGgId">
+        update xtrw_todo set ggId=#{ggId} where todoId=#{todoId}
+    </update>
+
+    <select id="getTodoByXtrwId" resultType="com.zjw.oa.entity.XtrwTodo">
+        select * from xtrw_todo where xtrwId=#{xtrwId} limit 1
+    </select>
+
+</mapper>

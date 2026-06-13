@@ -82,7 +82,7 @@ public class ImportExcelUtil {
     public static boolean isRowEmpty(Row row) {
         for (int c = row.getFirstCellNum(); c < row.getLastCellNum(); c++) {
             Cell cell = row.getCell(c);
-            if (cell != null && cell.getCellType() != Cell.CELL_TYPE_BLANK)
+            if (cell != null && cell.getCellType() != CellType.BLANK)
                 return false;
         }
         return true;
@@ -147,14 +147,14 @@ public class ImportExcelUtil {
 		return value;*/
         String result = new String();
         switch (cell.getCellType()) {
-            case HSSFCell.CELL_TYPE_FORMULA:  //Excel公式
+            case FORMULA:  //Excel公式
                 try {
                     result = String.valueOf(cell.getNumericCellValue());
                 } catch (IllegalStateException e) {
                     result = String.valueOf(cell.getRichStringCellValue());
                 }
                 break;
-            case HSSFCell.CELL_TYPE_NUMERIC:// 数字类型
+            case NUMERIC:// 数字类型
                 if (HSSFDateUtil.isCellDateFormatted(cell)) {// 处理日期格式、时间格式
                     SimpleDateFormat sdf;
                     if (cell.getCellStyle().getDataFormat() == HSSFDataFormat
@@ -184,10 +184,10 @@ public class ImportExcelUtil {
                     result = format.format(value);
                 }
                 break;
-            case HSSFCell.CELL_TYPE_STRING:// String类型
+            case STRING:// String类型
                 result = cell.getRichStringCellValue().toString();
                 break;
-            case HSSFCell.CELL_TYPE_BLANK:
+            case BLANK:
                 result = "";
             default:
                 result = "";
