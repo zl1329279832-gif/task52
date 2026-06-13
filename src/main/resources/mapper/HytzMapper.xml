@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zjw.oa.mapper.HytzMapper">
+
+    <!--
+        时间段重叠判断（严格不等式，相邻不算冲突）：
+        已有记录 [A_start, A_end) 与新请求 [B_start, B_end) 重叠 ⟺ A_start < B_end AND A_end > B_start
+    -->
+    <select id="countOverlappingReservations" resultType="int">
+        SELECT COUNT(*)
+        FROM hytz
+        WHERE hydd = #{hydd}
+          AND ksTime &lt; #{jsTime}
+          AND jsTime &gt; #{ksTime}
+    </select>
+
+    <select id="countUserConflicts" resultType="int">
+        SELECT COUNT(*)
+        FROM hytz
+        WHERE hybtzr = #{userId}
+          AND ksTime &lt; #{jsTime}
+          AND jsTime &gt; #{ksTime}
+    </select>
+
+    <insert id="insertReservation" parameterType="com.zjw.oa.entity.Hytz"
+            useGeneratedKeys="true" keyProperty="hyId">
+        INSERT INTO hytz (hynr, hyTime, hydd, hybtzr, hyztr, ksTime, jsTime)
+        VALUES (#{hynr}, #{hyTime}, #{hydd}, #{hybtzr}, #{hyztr}, #{ksTime}, #{jsTime})
+    </insert>
+
+    <select id="selectByRoom" resultType="com.zjw.oa.entity.Hytz">
+        SELECT * FROM hytz WHERE hydd = #{hydd} ORDER BY ksTime
+    </select>
+
+</mapper>

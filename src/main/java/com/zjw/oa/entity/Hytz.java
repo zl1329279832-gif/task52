@@ -7,10 +7,15 @@ public class Hytz {
 
   private int hyId;
   private String hynr;
-  private Date  hyTime;
+  private Date hyTime;
   private String hydd;
   private int hybtzr;
   private int hyztr;
+
+  /** 会议开始时间 */
+  private Date ksTime;
+  /** 会议结束时间 */
+  private Date jsTime;
 
 
   public int getHyId() {
@@ -31,11 +36,11 @@ public class Hytz {
   }
 
 
-  public Date  getHyTime() {
+  public Date getHyTime() {
     return hyTime;
   }
 
-  public void setHyTime(Date  hyTime) {
+  public void setHyTime(Date hyTime) {
     this.hyTime = hyTime;
   }
 
@@ -49,5 +54,39 @@ public class Hytz {
   }
 
 
+  public int getHybtzr() {
+    return hybtzr;
+  }
+
+  public void setHybtzr(int hybtzr) {
+    this.hybtzr = hybtzr;
+  }
+
+
+  public int getHyztr() {
+    return hyztr;
+  }
+
+  public void setHyztr(int hyztr) {
+    this.hyztr = hyztr;
+  }
+
+
+  public Date getKsTime() {
+    return ksTime;
+  }
+
+  public void setKsTime(Date ksTime) {
+    this.ksTime = ksTime;
+  }
+
+
+  public Date getJsTime() {
+    return jsTime;
+  }
+
+  public void setJsTime(Date jsTime) {
+    this.jsTime = jsTime;
+  }
 
 }

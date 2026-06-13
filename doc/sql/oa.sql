@@ -56,6 +56,8 @@ CREATE TABLE `hytz`  (
   `hydd` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '会议地点',
   `hybtzr` int(5) NULL DEFAULT NULL COMMENT '会议被通知人id',
   `hyztr` int(5) NULL DEFAULT NULL COMMENT '会议通知人id',
+  `ksTime` datetime(0) NULL DEFAULT NULL COMMENT '会议开始时间',
+  `jsTime` datetime(0) NULL DEFAULT NULL COMMENT '会议结束时间',
   PRIMARY KEY (`hyId`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
