@@ -18,7 +18,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Description
@@ -122,19 +125,57 @@ public class UserController {
     @RequestMapping(value = "/ky")
     @ResponseBody
     @CrossOrigin
-    public String kh(String time,String hysbh,List<String> userIdList) throws Exception {
-        //List<User> userList = new ArrayList<>();
-        for(int i=0;i<userIdList.size();i++){
+    public JSONObject kh(String time, String hysbh, List<String> userIdList,
+                         String ksTimeStr, String jsTimeStr) throws Exception {
+        JSONObject response = new JSONObject();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        // 如果提供了开始和结束时间，先进行预约冲突检查
+        if (ksTimeStr != null && !ksTimeStr.isEmpty()
+                && jsTimeStr != null && !jsTimeStr.isEmpty()) {
+            Date ksTime;
+            Date jsTime;
+            try {
+                ksTime = sdf.parse(ksTimeStr);
+                jsTime = sdf.parse(jsTimeStr);
+            } catch (Exception e) {
+                response.put("success", false);
+                response.put("msg", "时间格式错误，请使用 yyyy-MM-dd HH:mm:ss 格式");
+                return response;
+            }
+
+            List<Long> uidList = new java.util.ArrayList<>();
+            for (String uid : userIdList) {
+                uidList.add(Long.parseLong(uid));
+            }
+
+            Map<String, Object> bookResult = userService.bookMeeting(
+                    hysbh, "会议通知", ksTime, jsTime, uidList, 0);
+
+            if (!(Boolean) bookResult.get("success")) {
+                response.put("success", false);
+                response.put("msg", bookResult.get("msg"));
+                return response;
+            }
+        }
+
+        // 预约成功或无需预约时，发送短信通知
+        for (int i = 0; i < userIdList.size(); i++) {
             User user = new User();
             user.setUserId(Long.parseLong(userIdList.get(i)));
             User u = userService.getUser(user);
             try {
                 message(u.getPhone(), hysbh, time);
-            }catch (Exception e){
-                return "false";
+            } catch (Exception e) {
+                response.put("success", false);
+                response.put("msg", "短信发送失败");
+                return response;
             }
         }
-        return "true";
+
+        response.put("success", true);
+        response.put("msg", "操作成功");
+        return response;
     }
 
     private void message(String phone,String hysbh,String time) throws IOException {

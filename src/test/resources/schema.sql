@@ -77,7 +77,9 @@ CREATE TABLE IF NOT EXISTS hytz (
   hyTime  DATETIME,
   hydd    VARCHAR(255),
   hybtzr  VARCHAR(255),
-  hyztr   VARCHAR(255)
+  hyztr   VARCHAR(255),
+  ksTime  DATETIME,
+  jsTime  DATETIME
 );
 
 -- 请假申请表
